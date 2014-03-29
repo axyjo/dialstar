@@ -85,7 +85,7 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	//b.Write(str)
 	//fmt.Println(r.Form["CallSid"][0] + " - " + " call initiated from " + r.Form["From"][0])
 	//Play Cowbell until user is matched
-	response := &twiml.Play{Text: "https://api.twilio.com/cowbell.mp3", Loop: "1"}
+	response := &twiml.Play{Text: "http://com.twilio.music.classical.s3.amazonaws.com/ClockworkWaltz.mp3", Loop: "1"}
 	//Marshal the response
 	str, err := xml.Marshal(response)
 	if err != nil {
