@@ -59,7 +59,7 @@ func PollWaiters(c chan twiml.Thingy) {
 				//remove the first and second user from the queue
 				user_queue.Remove(first)
 				user_queue.Remove(second)
-				fmt.Printf("Created a new conference for %.6s and %.6s\n", f, s)
+				fmt.Printf("Created a conference for %.6s and %.6s\n", f, s)
 				fmt.Printf("There are %d users in the queue\n", user_queue.Len())
 				//Concatenate the first and second user's CallSid to be used in the ConfURL
 				ConferenceId := f + s
