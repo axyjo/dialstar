@@ -58,8 +58,8 @@ func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	fmt.Println(fmt.Sprint(resp.Body))
-	fmt.Println("[META] - Current Active Users: " + fmt.Sprint(active_users.total))
-	text := "Welcome to Dial Star! There are  " + fmt.Sprint(active_users.total)
+	fmt.Println("[META] - Current Active Users: " + fmt.Sprint(active_users.Total))
+	text := "Welcome to Dial Star! There are  " + fmt.Sprint(active_users.Total)
 	text = text + " other users. Press star to skip a user."
 	say_response := &twiml.Say{Voice: "female", Language: "en", Loop: 1, Text: text}
 	str, err := xml.Marshal(say_response)
