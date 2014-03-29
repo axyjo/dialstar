@@ -1,0 +1,3 @@
+[submodule "src/github.com/gorilla/schema"]
+	path = src/github.com/gorilla/schema
+	url = https://github.com/gorilla/schema
