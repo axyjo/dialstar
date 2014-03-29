@@ -20,7 +20,7 @@ socket.onmessage = function(msg) {
 		// hangup
 		var span = document.getElementById(data.Call1Id);
 		if(span) {
-			span.parentElement.parentElement.remove();
+			span.parentElement.remove();
 			document.getElementById('conferencecount').innerText = parseInt(document.getElementById('conferencecount').innerText) - 1;
 		}
 	}
