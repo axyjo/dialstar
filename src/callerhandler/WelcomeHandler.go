@@ -18,7 +18,7 @@ import (
 //Holds information about the user calling in
 
 type Marshal struct {
-	total interface{}
+	Total int `json:"total"`
 }
 
 func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
@@ -53,7 +53,7 @@ func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 	defer resp.Body.Close()
 	active_users := &Marshal{}
 	dec := json.NewDecoder(resp.Body)
-	err = dec.Decode(&active_users.total)
+	err = dec.Decode(&active_users)
 	if err != nil {
 		panic(err)
 	}
