@@ -24,6 +24,7 @@ func main() {
 	Conf_dequeue := callerhandler.HangUpWrapper{Callerid: callers_waiting, Push: &push}
 	Conf_newUser := callerhandler.WelcomeWrapper{Push: &push}
 	Conf_push := webui.WebSocketWrapper{Push: &push}
+	Conf_adremove := callerhandler.AdWrapper{Push: &push}
 
 	//Have a function that polls users and queues and dequeues users as necessary
 	go PollWaiters(callers_waiting, &push)
@@ -33,7 +34,7 @@ func main() {
 	http.HandleFunc("/conference/", callerhandler.ConferenceHandler)
 	http.HandleFunc("/hangup/", Conf_dequeue.HangUpHandler)
 	http.HandleFunc("/welcome/", Conf_newUser.WelcomeHandler)
-	http.HandleFunc("/ad/", callerhandler.AdHandler)
+	http.HandleFunc("/ad/", Conf_adremove.AdHandler)
 	http.HandleFunc("/webui/websocket", Conf_push.WebSocketHandler)
 	http.HandleFunc("/webui/", webui.WebHandler)
 	//Starts the HTTP server at the address Localhost:3000

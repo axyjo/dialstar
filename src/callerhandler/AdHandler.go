@@ -8,13 +8,16 @@ import (
 	_ "io/ioutil"
 	"net/http"
 	"twiml"
+	"webui"
 )
-
 
 var ad_counter = 0
 
+type AdWrapper struct {
+	Push *[]chan webui.PushData
+}
 
-func AdHandler(w http.ResponseWriter, r *http.Request) {
+func (c AdWrapper) AdHandler(w http.ResponseWriter, r *http.Request) {
 	//Check if it's a POST call, if not return immediately
 	if r.Method != "POST" {
 		return
@@ -63,4 +66,11 @@ func AdHandler(w http.ResponseWriter, r *http.Request) {
 	b.WriteString(end)
 	//Write the Buffer to the http.ResponseWriter
 	b.WriteTo(w)
+
+	for _, j := range *c.Push {
+		j <- webui.PushData{
+			UserCount: -1,
+			Call1Id:   request.CallSid,
+		}
+	}
 }
