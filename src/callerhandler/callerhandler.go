@@ -20,7 +20,6 @@ const (
 //CallerWrapper which holds a channel the interface Thingy
 type CallerWrapper struct {
 	Callerid chan twiml.Thingy
-	Push     *[]chan webui.PushData
 }
 
 type context struct {
@@ -102,11 +101,4 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	//adds the Thingy to the channel with the users's CallSid, City, and Queue flag set to true.
 	c.Callerid <- twiml.Thingy{request.CallSid, request.FromCity, true}
 	fmt.Println(request.CallSid + " - Queued")
-
-	for _, j := range *c.Push {
-		j <- webui.PushData{
-			UserCount: -1,
-			Call1Id:   request.CallSid,
-		}
-	}
 }
