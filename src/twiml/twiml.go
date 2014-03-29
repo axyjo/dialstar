@@ -43,3 +43,9 @@ type Number struct {
 	Url        string `xml:"url,attr,omitempty"`
 	Method     string `xml:"method,attr,omitempty"`
 }
+
+type Play struct {
+	Text   string `xml:",chardata"`
+	Loop   string `xml:"loop,attr,omitempty"`
+	Digits string `xml:"digits,attr,omitempty"`
+}

@@ -15,6 +15,10 @@ const (
 	end   = `</Response>`
 )
 
+type CallerWrapper struct {
+	Callerid chan string
+}
+
 type Say struct {
 	XMLName  xml.Name `xml:"Say"`
 	Voice    string   `xml:"voice,attr"`
@@ -54,7 +58,7 @@ type StatusCallbackRequest struct {
 	RecordingDuration string
 }
 
-func CallerHandler(w http.ResponseWriter, r *http.Request) {
+func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		return
 	}
@@ -78,13 +82,14 @@ func CallerHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	b.Write(str)
-	response := &twiml.Conference{Text: "foobar", EndConferenceOnExit: "true"}
-	dial := &twiml.Dial{Conference: *response}
-	str, err = xml.Marshal(dial)
+	response := &twiml.Play{Text: "https://api.twilio.com/cowbell.mp3", Loop: "0"}
+	str, err = xml.Marshal(response)
 	if err != nil {
 		panic(err)
 	}
 	b.Write(str)
 	b.WriteString(end)
 	b.WriteTo(w)
+	c.Callerid <- r.Form["CallSid"][0]
+
 }
