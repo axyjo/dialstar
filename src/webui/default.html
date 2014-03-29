@@ -11,21 +11,25 @@ socket.onmessage = function(msg) {
 
 	console.log(data);
 	
-	document.getElementById('usercount').innerText = data.UserCount;
-	document.getElementById('conferencecount').innerText = Math.floor(data.UserCount / 2);
-	
-	var conferences = "";
-	/*
-	for(var i = 0; i < data.Conferences.length; ++i) {
-		conferences += createConference(i, data.Conferences[i]);
+	if(data.UserCount == -1) {
+		// hangup
+		document.getElementById(data.Call1Id).parent.remove();
+		document.getElementById('conferencecount').innerText = parseInt(document.getElementById('conferencecount').innerText) - 1;
+	}
+	else {
+		document.getElementById('usercount').innerText = data.UserCount;
+		if(Call2Id != "" && Call2Id != "") {
+			document.getElementById('conferenceslist').innerHTML += createConference(0, data);
+			document.getElementById('conferencecount').innerText = parseInt(document.getElementById('conferencecount').innerText) + 1;
+		}
 	}
 	
-	document.getElementById('conferenceslist').innerHTML = conferences;
-	*/
+	//document.getElementById('conferencecount').innerText = Math.floor((data.UserCount - 1) / 2);
+	
 };
 
 function createConference(i, conference) {
-	return '<fieldset class="conference"><legend class="conferenceid">Room ' + i + '</legend><div class="caller1">Caller 1: <span class="caller1number">' + conference.Caller1 + '</span></div><div class="caller2">Caller 2: <span class="caller2number">' + conference.Caller2 + '</span></div></fieldset>';
+	return '<fieldset class="conference"><legend class="conferenceid">Room ' + i + '</legend><div class="caller1">Caller 1: <span class="caller1number" id="' + conference.Call1Id + '">' + conference.Call1Id + '</span></div><div class="caller2" id="' + conference.Call2Id + '">Caller 2: <span class="caller2number">' + conference.Call2Id + '</span></div></fieldset>';
 }
 </script>
 <style>
