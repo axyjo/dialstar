@@ -21,6 +21,8 @@ type CallerWrapper struct {
 	Callerid chan twiml.Thingy
 }
 
+var ad_counter = 0
+
 //Holds information about the user calling in
 type VoiceRequest struct {
 	CallSid       string
@@ -68,7 +70,18 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	//Creates a new Buffer with the initial start xml string
 	b := bytes.NewBufferString(start)
 
-	//Marshal the say_repsonse
+	// Queue an ad.
+	ad_response := &twiml.Play{Text: "https://s3.amazonaws.com/dialstar.uwaterloo.ca/" + fmt.Sprintf(ad_counter) + ".mp3", Loop: "1"}
+	ad_counter++
+	ad_counter %= 3
+
+	//Marshal the response
+	ad_str, ad_err := xml.Marshal(ad_response)
+	if ad_err != nil {
+		panic(ad_err)
+	}
+	//Write the reponse to the Buffer
+	b.Write(ad_str)
 
 	//say_response := &twiml.Say{Voice: "female", Language: "en", Loop: 1, Text: "Welcome to Dial Star, There are currently  " + cityName[0]}
 	//str, err := xml.Marshal(say_response)
