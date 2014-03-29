@@ -2,12 +2,15 @@ package callerhandler
 
 import (
 	"bytes"
+	"encoding/json"
 	"encoding/xml"
 	"fmt"
 	"github.com/gorilla/schema"
 	_ "io/ioutil"
 	"net/http"
 	"twiml"
+	"github.com/mattbaird/elastigo/api"
+	"github.com/mattbaird/elastigo/core"
 )
 
 //start and end of the xml sent to Twilio
@@ -53,6 +56,11 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Set up ES host/port.
+	api.Domain = "twilio.axyjo.com"
+	api.Port = "9200"
+
+
 	//Error handling
 	err := r.ParseForm()
 	if err != nil {
@@ -63,9 +71,15 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	var request VoiceRequest
 	decoder := schema.NewDecoder()
 	decoder.Decode(&request, r.Form)
-	//Store the city name of the user making the call
-	//cityName := r.Form["FromCity"]
-	//fmt.Println(actual)
+
+	// Store the information from the request into ElasticSearch for analytics
+	bytesLine, err := json.Marshal(request)
+	_, err = core.Index("hackathon", "logs", "", nil, bytesLine)
+	if (err != nil) {
+		panic(err)
+	}
+
+
 	if request.CallStatus == "completed" {
 		return
 	}
