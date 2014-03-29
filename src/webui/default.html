@@ -6,6 +6,8 @@
 <script type="text/javascript">
 var socket = new WebSocket("ws://twilio.axyjo.com:3000/webui/websocket");
 
+var conferenceId = 0;
+
 socket.onmessage = function(msg) {
 	var data = JSON.parse(msg.data);
 
@@ -13,13 +15,13 @@ socket.onmessage = function(msg) {
 	
 	if(data.UserCount == -1) {
 		// hangup
-		document.getElementById(data.Call1Id).parent.remove();
+		document.getElementById(data.Call1Id).parentElement.remove();
 		document.getElementById('conferencecount').innerText = parseInt(document.getElementById('conferencecount').innerText) - 1;
 	}
 	else {
 		document.getElementById('usercount').innerText = data.UserCount;
 		if(data.Call1Id != "" && data.Call2Id != "") {
-			document.getElementById('conferenceslist').innerHTML += createConference(0, data);
+			document.getElementById('conferenceslist').innerHTML += createConference(conferenceId++, data);
 			document.getElementById('conferencecount').innerText = parseInt(document.getElementById('conferencecount').innerText) + 1;
 		}
 	}
