@@ -8,7 +8,7 @@ import (
 )
 
 type WebSocketWrapper struct {
-	Push []chan PushData
+	Push *[]chan PushData
 }
 
 type PushData struct {
@@ -19,8 +19,10 @@ type PushData struct {
 
 func (c WebSocketWrapper) WebSocketHandler(w http.ResponseWriter, r *http.Request) {
 	push := make(chan PushData, 5)
-	c.Push = append(c.Push, push)
+	*c.Push = append(*c.Push, push)
 	fmt.Println("Incoming web socket request")
+
+	fmt.Printf("There are %d web sockets connected\n", len(*c.Push))
 
 	conn, err := websocket.Upgrade(w, r, nil, 1024, 1024)
 
@@ -35,24 +37,22 @@ func (c WebSocketWrapper) WebSocketHandler(w http.ResponseWriter, r *http.Reques
 
 	err = conn.WriteJSON(data)
 
-	if err != nil {
+	if err == nil {
+		go func() {
+			for err == nil {
+				p := <-push
 
-	}
-
-	go func() {
-		var err error = nil
-		for err == nil {
-			p := <-push
-
-			err = conn.WriteJSON(p)
-
-		}
-		for i, p := range c.Push {
-			if p == push {
-				c.Push[i], c.Push = c.Push[len(c.Push)-1], c.Push[:len(c.Push)-1]
-				close(p)
-				break
+				err = conn.WriteJSON(p)
 			}
-		}
-	}()
+
+			fmt.Println("Removing channel")
+			for i, p := range *c.Push {
+				if p == push {
+					(*c.Push)[i], *c.Push = (*c.Push)[len(*c.Push)-1], (*c.Push)[:len(*c.Push)-1]
+					close(p)
+					break
+				}
+			}
+		}()
+	}
 }

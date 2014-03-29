@@ -15,12 +15,13 @@ socket.onmessage = function(msg) {
 	document.getElementById('conferencecount').innerText = data.UserCount / 2;
 	
 	var conferences = "";
-	
+	/*
 	for(var i = 0; i < data.Conferences.length; ++i) {
 		conferences += createConference(i, data.Conferences[i]);
 	}
 	
 	document.getElementById('conferenceslist').innerHTML = conferences;
+	*/
 };
 
 function createConference(i, conference) {
@@ -66,7 +67,7 @@ html, body {
 
 <h1>Conferences</h1>
 <h2 id="conferences">
-	There are <span id=conferencecount">0</span> conferences started.
+	There are <span id="conferencecount">0</span> conferences started.
 </h2>
 
 <div id="conferenceslist">

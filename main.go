@@ -17,12 +17,12 @@ var user_queue *list.List
 func main() {
 	//Create a new channel of size 10 (shouldn't get much larger than this)
 	callers_waiting := make(chan twiml.Thingy, 10)
-	push := make([]chan webui.PushData, 5)
+	push := make([]chan webui.PushData, 0)
 
 	//Create a new CallerHandler with a CallerWrapper/HangupWrapper with the shared channel callers_waiting
 	Conf_waiters := callerhandler.CallerWrapper{Callerid: callers_waiting}
-	Conf_dequeue := callerhandler.HangUpWrapper{Callerid: callers_waiting, Push: push}
-	Conf_push := webui.WebSocketWrapper{Push: push}
+	Conf_dequeue := callerhandler.HangUpWrapper{Callerid: callers_waiting, Push: &push}
+	Conf_push := webui.WebSocketWrapper{Push: &push}
 
 	//Have a function that polls users and queues and dequeues users as necessary
 	go PollWaiters(callers_waiting, push)
