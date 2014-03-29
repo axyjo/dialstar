@@ -24,7 +24,9 @@ func main() {
 	Conf_dequeue := callerhandler.HangUpWrapper{Callerid: callers_waiting, Push: &push}
 	Conf_newUser := callerhandler.WelcomeWrapper{Push: &push}
 	Conf_push := webui.WebSocketWrapper{Push: &push}
-	Conf_adremove := callerhandler.AdWrapper{Push: &push}
+	
+	ad_count := make([]int, 3)
+	Conf_adremove := callerhandler.AdWrapper(Push: &push, Ads_Played: ad_count)
 
 	//Have a function that polls users and queues and dequeues users as necessary
 	go PollWaiters(callers_waiting, &push)

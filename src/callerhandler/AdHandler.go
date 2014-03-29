@@ -11,11 +11,12 @@ import (
 	"webui"
 )
 
-var ad_counter = 0
-
 type AdWrapper struct {
-	Push *[]chan webui.PushData
+	Push      *[]chan webui.PushData
+	AdsPlayed []int
 }
+
+var ad_counter = 0
 
 func (c AdWrapper) AdHandler(w http.ResponseWriter, r *http.Request) {
 	//Check if it's a POST call, if not return immediately
@@ -44,7 +45,9 @@ func (c AdWrapper) AdHandler(w http.ResponseWriter, r *http.Request) {
 	b := bytes.NewBufferString(start)
 
 	// Queue an ad.
+
 	ad_response := &twiml.Play{Text: fmt.Sprintf("https://s3.amazonaws.com/dialstar.uwaterloo.ca/%d.mp3", ad_counter), Loop: "1"}
+	c.AdsPlayed[ad_counter]++
 	ad_counter++
 	ad_counter %= 3
 
