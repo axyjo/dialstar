@@ -64,9 +64,11 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	var request VoiceRequest
 	decoder := schema.NewDecoder()
 	decoder.Decode(&request, r.Form)
-
 	cityName := r.Form["FromCity"]
 	//fmt.Println(actual)
+	if request.CallStatus == "completed" {
+		return
+	}
 	b := bytes.NewBufferString(start)
 	say_response := &Say{Voice: "female", Language: "en", Loop: 1, Text: "Colin from " + cityName[0]}
 
