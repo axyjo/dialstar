@@ -12,6 +12,7 @@ socket.onmessage = function(msg) {
 	console.log(data);
 	
 	document.getElementById('usercount').innerText = data.UserCount;
+	document.getElementById('conferencecount').innerText = data.UserCount / 2;
 	
 	var conferences = "";
 	
@@ -19,7 +20,7 @@ socket.onmessage = function(msg) {
 		conferences += createConference(i, data.Conferences[i]);
 	}
 	
-	document.getElementById('conferences').innerHTML = conferences;
+	document.getElementById('conferenceslist').innerHTML = conferences;
 };
 
 function createConference(i, conference) {
@@ -60,11 +61,17 @@ html, body {
 <div id="content">
 <h1>Users</h1>
 <h2 id="users">
-	There are currently <span id="usercount">0</span> users connected.
+	There are <span id="usercount">0</span> users connected.
 </h2>
+
 <h1>Conferences</h1>
-<div id="conferences">
+<h2 id="conferences">
+	There are <span id=conferencecount">0</span> conferences started.
+</h2>
+
+<div id="conferenceslist">
 </div>
+
 </div>
 </body>
 </html>

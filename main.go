@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"twiml"
+	"utils"
 	"webui"
 )
 
@@ -16,11 +17,11 @@ var user_queue *list.List
 func main() {
 	//Create a new channel of size 10 (shouldn't get much larger than this)
 	callers_waiting := make(chan twiml.Thingy, 10)
-	push := make(chan bool, 10)
+	push := make([]chan webui.PushData, 5)
 
 	//Create a new CallerHandler with a CallerWrapper/HangupWrapper with the shared channel callers_waiting
 	Conf_waiters := callerhandler.CallerWrapper{Callerid: callers_waiting}
-	Conf_dequeue := callerhandler.HangUpWrapper{Callerid: callers_waiting}
+	Conf_dequeue := callerhandler.HangUpWrapper{Callerid: callers_waiting, Push: push}
 	Conf_push := webui.WebSocketWrapper{Push: push}
 
 	//Have a function that polls users and queues and dequeues users as necessary
@@ -41,7 +42,7 @@ func main() {
 	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }
 
-func PollWaiters(c chan twiml.Thingy, p chan bool) {
+func PollWaiters(c chan twiml.Thingy, p []chan webui.PushData) {
 	//Creates an empty queue to put users in
 	user_queue = list.New()
 	//Iterates over each element in the channel
@@ -86,7 +87,13 @@ func PollWaiters(c chan twiml.Thingy, p chan bool) {
 				if err != nil {
 					panic(err)
 				}
-				p <- true
+				for _, j := range p {
+					j <- webui.PushData{
+						UserCount: utils.GetUserCount(),
+						Call1Id:   f,
+						Call2Id:   s,
+					}
+				}
 			}
 		} else {
 			//Otherwise the user is to be dequeued.
@@ -94,7 +101,10 @@ func PollWaiters(c chan twiml.Thingy, p chan bool) {
 			for i := user_queue.Front(); i != nil; i = i.Next() {
 				if i.Value.(twiml.Thingy).CallSid == element.CallSid {
 					user_queue.Remove(i)
-					p <- true
+
+					for _, j := range p {
+						j <- webui.PushData{UserCount: utils.GetUserCount()}
+					}
 					break
 				}
 			}

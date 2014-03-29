@@ -6,6 +6,7 @@ import (
 	_ "io/ioutil"
 	"net/http"
 	"twiml"
+	"webui"
 )
 
 type StatusCallbackRequest struct {
@@ -20,6 +21,7 @@ type StatusCallbackRequest struct {
 
 type HangUpWrapper struct {
 	Callerid chan twiml.Thingy
+	Push     []chan webui.PushData
 }
 
 func (c HangUpWrapper) HangUpHandler(w http.ResponseWriter, r *http.Request) {
@@ -41,5 +43,11 @@ func (c HangUpWrapper) HangUpHandler(w http.ResponseWriter, r *http.Request) {
 	if request.CallStatus == "completed" {
 		c.Callerid <- twiml.Thingy{request.CallSid, "", false}
 		fmt.Printf("%.6s has hung up\n", request.CallSid)
+		for _, j := range c.Push {
+			j <- webui.PushData{
+				UserCount: -1,
+				Call1Id:   request.CallSid,
+			}
+		}
 	}
 }

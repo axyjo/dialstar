@@ -1,30 +1,25 @@
 package webui
 
 import (
-	"callerhandler"
 	"fmt"
 	"github.com/gorilla/websocket"
 	"net/http"
-	"time"
+	"utils"
 )
 
-type Data struct {
-	Field       string
-	UserCount   int
-	Conferences []Conference
-}
-
-type Conference struct {
-	StartTime time.Time
-	Caller1   string
-	Caller2   string
-}
-
 type WebSocketWrapper struct {
-	Push chan bool
+	Push []chan PushData
+}
+
+type PushData struct {
+	UserCount int
+	Call1Id   string
+	Call2Id   string
 }
 
 func (c WebSocketWrapper) WebSocketHandler(w http.ResponseWriter, r *http.Request) {
+	push := make(chan PushData, 5)
+	c.Push = append(c.Push, push)
 	fmt.Println("Incoming web socket request")
 
 	conn, err := websocket.Upgrade(w, r, nil, 1024, 1024)
@@ -36,32 +31,28 @@ func (c WebSocketWrapper) WebSocketHandler(w http.ResponseWriter, r *http.Reques
 		panic(err)
 	}
 
-	data := getData()
+	data := PushData{UserCount: utils.GetUserCount()}
 
 	err = conn.WriteJSON(data)
 
 	if err != nil {
 
 	}
-}
 
-func getUserCount() int {
-	return 15
-}
+	go func() {
+		var err error = nil
+		for err == nil {
+			p := <-push
 
-func getConferences() []Conference {
-	conference1 := Conference{StartTime: time.Now(),
-		Caller1: "Foo",
-		Caller2: "Bar"}
-	conference2 := Conference{StartTime: time.Now(),
-		Caller1: "Gitesh",
-		Caller2: "Dhir"}
-	return []Conference{conference1, conference2}
-}
+			err = conn.WriteJSON(p)
 
-func getData() Data {
-	return Data{
-		UserCount:   callerhandler.GetUserCount(),
-		Conferences: getConferences(),
-	}
+		}
+		for i, p := range c.Push {
+			if p == push {
+				c.Push[i], c.Push = c.Push[len(c.Push)-1], c.Push[:len(c.Push)-1]
+				close(p)
+				break
+			}
+		}
+	}()
 }
