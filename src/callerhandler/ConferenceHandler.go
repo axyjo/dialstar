@@ -29,7 +29,7 @@ func ConferenceHandler(w http.ResponseWriter, r *http.Request) {
 
 	//Debugging statements
 	Conf_id := r.Form["ConferenceId"]
-	fmt.Println("%.5s entered conference %.5s", request.CallSid, request.ConferenceId)
+	fmt.Println("%.6s entered conference %.6s", request.CallSid, request.ConferenceId)
 	//Create a new Buffer and writes to it. Similar to callerhandler
 	b := bytes.NewBufferString(start)
 	say_response := &twiml.Say{Voice: "female", Language: "en", Loop: 1, Text: "Connecting to user from " + request.OtherCity}

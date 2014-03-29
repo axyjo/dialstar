@@ -40,6 +40,6 @@ func (c HangUpWrapper) HangUpHandler(w http.ResponseWriter, r *http.Request) {
 	//If the user has hung up, send n new request through the channel to dequeue the user
 	if request.CallStatus == "completed" {
 		c.Callerid <- twiml.Thingy{request.CallSid, "", false}
-		fmt.Printf("%.5s has hung up\n", request.CallSid)
+		fmt.Printf("%.6s has hung up\n", request.CallSid)
 	}
 }
