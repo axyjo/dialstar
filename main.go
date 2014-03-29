@@ -49,7 +49,7 @@ func PollWaiters(c chan twiml.Thingy) {
 			len := user_queue.Len()
 			fmt.Printf("There are %d users in the queue\n", len)
 			//If there are 2 or more users in the queue
-			iflen >= 3 {
+			if len >= 3 {
 				//Get a pointer to the first element of the queue
 				first := user_queue.Front()
 				f := first.Value.(twiml.Thingy).CallSid
