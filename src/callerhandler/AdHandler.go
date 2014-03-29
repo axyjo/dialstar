@@ -48,6 +48,7 @@ func (c AdWrapper) AdHandler(w http.ResponseWriter, r *http.Request) {
 
 	ad_response := &twiml.Play{Text: fmt.Sprintf("https://s3.amazonaws.com/dialstar.uwaterloo.ca/%d.mp3", ad_counter), Loop: "1"}
 	c.AdsPlayed[ad_counter]++
+	fmt.Println(c.AdsPlayed)
 	ad_counter++
 	ad_counter %= 3
 
@@ -70,14 +71,10 @@ func (c AdWrapper) AdHandler(w http.ResponseWriter, r *http.Request) {
 	//Write the Buffer to the http.ResponseWriter
 	b.WriteTo(w)
 
-	pData := webui.PushData{UserCount: -1}
-	if webui.UseNumbers {
-		pData.Call1Id = request.From
-	} else {
-		pData.Call1Id = request.CallSid
-	}
-
 	for _, j := range *c.Push {
-		j <- pData
+		j <- webui.PushData{
+			UserCount: -1,
+			Call1Id:   request.CallSid,
+		}
 	}
 }
