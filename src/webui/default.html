@@ -13,7 +13,7 @@ socket.onmessage = function(msg) {
 
 	console.log(data);
 	
-	if(data != -1) {
+	if(data.UserCount != -1) {
 		document.getElementById('usercount').innerText = data.UserCount;
 	}
 	if(data.Call2Id == "") {
