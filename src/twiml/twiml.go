@@ -31,6 +31,7 @@ type Thingy struct {
 	CallSid string
 	City    string
 	Add     bool
+	Number  string
 }
 
 type Conference struct {

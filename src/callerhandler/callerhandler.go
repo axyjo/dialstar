@@ -98,6 +98,6 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	//Write the Buffer to the http.ResponseWriter
 	b.WriteTo(w)
 	//adds the Thingy to the channel with the users's CallSid, City, and Queue flag set to true.
-	c.Callerid <- twiml.Thingy{request.CallSid, request.FromCity, true}
+	c.Callerid <- twiml.Thingy{request.CallSid, request.FromCity, true, request.From}
 	fmt.Println(request.CallSid + " - Queued")
 }

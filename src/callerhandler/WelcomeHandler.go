@@ -66,11 +66,17 @@ func (c WelcomeWrapper) WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 	b.WriteString(end)
 	//Write the Buffer to the http.ResponseWriter
 	b.WriteTo(w)
+
+	pData := webui.PushData{UserCount: userCount + 1}
+
+	if webui.UseNumbers {
+		pData.Call1Id = request.From
+	} else {
+		pData.Call1Id = request.CallSid
+	}
+
 	for _, j := range *c.Push {
-		j <- webui.PushData{
-			UserCount: userCount + 1,
-			Call1Id:   request.CallSid,
-		}
+		j <- pData
 	}
 
 }

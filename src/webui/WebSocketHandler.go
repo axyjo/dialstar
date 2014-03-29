@@ -11,6 +11,8 @@ type WebSocketWrapper struct {
 	Push *[]chan PushData
 }
 
+var UseNumbers bool = true
+
 type PushData struct {
 	UserCount int
 	Call1Id   string

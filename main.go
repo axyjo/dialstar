@@ -89,12 +89,19 @@ func PollWaiters(c chan twiml.Thingy, p *[]chan webui.PushData) {
 				if err != nil {
 					panic(err)
 				}
+
+				pData := webui.PushData{UserCount: utils.GetUserCount()}
+
+				if webui.UseNumbers {
+					pData.Call1Id = first.Value.(twiml.Thingy).Number
+					pData.Call2Id = second.Value.(twiml.Thingy).Number
+				} else {
+					pData.Call1Id = f
+					pData.Call2Id = s
+				}
+
 				for _, j := range *p {
-					j <- webui.PushData{
-						UserCount: utils.GetUserCount(),
-						Call1Id:   f,
-						Call2Id:   s,
-					}
+					j <- pData
 				}
 			}
 		} else {
@@ -104,8 +111,10 @@ func PollWaiters(c chan twiml.Thingy, p *[]chan webui.PushData) {
 				if i.Value.(twiml.Thingy).CallSid == element.CallSid {
 					user_queue.Remove(i)
 
+					pData := webui.PushData{UserCount: utils.GetUserCount()}
+
 					for _, j := range *p {
-						j <- webui.PushData{UserCount: utils.GetUserCount()}
+						j <- pData
 					}
 					break
 				}

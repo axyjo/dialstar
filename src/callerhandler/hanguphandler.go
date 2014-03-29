@@ -18,6 +18,7 @@ type StatusCallbackRequest struct {
 	CallStatus        string
 	AccountSid        string
 	CallSid           string
+	From              string
 }
 
 type HangUpWrapper struct {
@@ -42,15 +43,18 @@ func (c HangUpWrapper) HangUpHandler(w http.ResponseWriter, r *http.Request) {
 	decoder.Decode(&request, r.Form)
 	//If the user has hung up, send n new request through the channel to dequeue the user
 	if request.CallStatus == "completed" {
-		c.Callerid <- twiml.Thingy{request.CallSid, "", false}
+		c.Callerid <- twiml.Thingy{request.CallSid, "", false, request.From}
 		fmt.Printf("%.6s has hung up\n", request.CallSid)
 	}
 
-	userCount := utils.GetUserCount()
+	pData := webui.PushData{UserCount: utils.GetUserCount()}
+	if webui.UseNumbers {
+		pData.Call1Id = request.From
+	} else {
+		pData.Call1Id = request.CallSid
+	}
+
 	for _, j := range *c.Push {
-		j <- webui.PushData{
-			UserCount: userCount,
-			Call1Id:   request.CallSid,
-		}
+		j <- pData
 	}
 }
