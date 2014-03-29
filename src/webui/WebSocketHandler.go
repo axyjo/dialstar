@@ -1,6 +1,7 @@
 package webui
 
 import (
+	"callerhandler"
 	"fmt"
 	"github.com/gorilla/websocket"
 	"net/http"
@@ -60,7 +61,7 @@ func getConferences() []Conference {
 
 func getData() Data {
 	return Data{
-		UserCount:   getUserCount(),
+		UserCount:   callerhandler.GetUserCount(),
 		Conferences: getConferences(),
 	}
 }
