@@ -70,8 +70,17 @@ html, body {
 	color: #FFDF00;
 	font-weight: bold;
 }
+#conferencecount {
+	color: yellow;
+}
+#usercount {
+	color: green;
+}
 #content {
 	padding: 5px;
+}
+#ads span {
+	color: red;
 }
 </style>
 </head>
@@ -83,6 +92,13 @@ html, body {
 	There are <span id="usercount">0</span> users connected.
 </h2>
 
+<h1>Ads</h1>
+<h2 id="ads">
+	Ad 0 played <span id="ad0count">0</span> times.<br>
+	Ad 1 played <span id="ad1count">0</span> times.<br>
+	Ad 2 played <span id="ad2count">0</span> times.
+</h2>
+
 <h1>Conferences</h1>
 <h2 id="conferences">
 	There are <span id="conferencecount">0</span> conferences started.
@@ -90,13 +106,6 @@ html, body {
 
 <div id="conferenceslist">
 </div>
-
-<h1>Ads</h1>
-<h2 id="ads">
-	Ad 0 played <span id="ad0count">0</span> times.
-	Ad 1 played <span id="ad1count">0</span> times.
-	Ad 2 played <span id="ad2count">0</span> times.
-</h2>
 
 </div>
 </body>
