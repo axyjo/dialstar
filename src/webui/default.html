@@ -18,7 +18,7 @@ socket.onmessage = function(msg) {
 	}
 	else {
 		document.getElementById('usercount').innerText = data.UserCount;
-		if(Call2Id != "" && Call2Id != "") {
+		if(data.Call1Id != "" && data.Call2Id != "") {
 			document.getElementById('conferenceslist').innerHTML += createConference(0, data);
 			document.getElementById('conferencecount').innerText = parseInt(document.getElementById('conferencecount').innerText) + 1;
 		}
