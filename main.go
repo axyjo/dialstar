@@ -14,10 +14,10 @@ var user_queue *list.List
 func main() {
 	callers_waiting := make(chan string, 10)
 	Conf_waiters := callerhandler.CallerWrapper{Callerid: callers_waiting}
+	go PollWaiters(callers_waiting)
 	http.HandleFunc("/caller/", Conf_waiters.CallerHandler)
 	http.HandleFunc("/conference/", callerhandler.ConferenceHandler)
 	http.ListenAndServe(":3000", nil)
-	go PollWaiters(callers_waiting)
 }
 
 func PollWaiters(c chan string) {
