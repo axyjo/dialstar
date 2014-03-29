@@ -25,7 +25,7 @@ func main() {
 	Conf_push := webui.WebSocketWrapper{Push: &push}
 
 	//Have a function that polls users and queues and dequeues users as necessary
-	go PollWaiters(callers_waiting, push)
+	go PollWaiters(callers_waiting, &push)
 
 	//Register the Handle functions for the given patters and appropriate handlers
 	http.HandleFunc("/caller/", Conf_waiters.CallerHandler)
@@ -42,7 +42,7 @@ func main() {
 	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }
 
-func PollWaiters(c chan twiml.Thingy, p []chan webui.PushData) {
+func PollWaiters(c chan twiml.Thingy, p *[]chan webui.PushData) {
 	//Creates an empty queue to put users in
 	user_queue = list.New()
 	//Iterates over each element in the channel
@@ -87,7 +87,7 @@ func PollWaiters(c chan twiml.Thingy, p []chan webui.PushData) {
 				if err != nil {
 					panic(err)
 				}
-				for _, j := range p {
+				for _, j := range *p {
 					j <- webui.PushData{
 						UserCount: utils.GetUserCount(),
 						Call1Id:   f,
@@ -102,7 +102,7 @@ func PollWaiters(c chan twiml.Thingy, p []chan webui.PushData) {
 				if i.Value.(twiml.Thingy).CallSid == element.CallSid {
 					user_queue.Remove(i)
 
-					for _, j := range p {
+					for _, j := range *p {
 						j <- webui.PushData{UserCount: utils.GetUserCount()}
 					}
 					break
