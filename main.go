@@ -3,6 +3,7 @@ package main
 import (
 	"callerhandler"
 	"container/list"
+	"fmt"
 	"net/http"
 	"net/url"
 )
@@ -24,13 +25,15 @@ func PollWaiters(c chan string) {
 
 	for element := range c {
 		_ = user_queue.PushBack(element)
-		if user_queue.Len() > 2 {
+		if user_queue.Len() >= 2 {
+			fmt.Println("[META] - Got two or more people.")
 			first := user_queue.Front()
 			user_queue.Remove(first)
 			f := first.Value.(string)
 			second := user_queue.Front()
 			user_queue.Remove(second)
 			s := second.Value.(string)
+			fmt.Println("[META] Paired " + f + " with " + s)
 
 			ConferenceId := f + s
 

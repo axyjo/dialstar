@@ -3,7 +3,7 @@ package callerhandler
 import (
 	"bytes"
 	"encoding/xml"
-	_ "fmt"
+	"fmt"
 	_ "io/ioutil"
 	"net/http"
 	"twiml"
@@ -14,7 +14,9 @@ func ConferenceHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+
 	Conf_id := r.Form["ConferenceId"]
+	fmt.Println("[META] - Twilio request to connect " + Conf_id[0])
 	b := bytes.NewBufferString(start)
 	Say_name := r.Form["OtherCity"]
 	say_response := &Say{Voice: "female", Language: "en", Loop: 1, Text: "Connecting to user from " + Say_name[0]}
