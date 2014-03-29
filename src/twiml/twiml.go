@@ -33,6 +33,7 @@ type Conference struct {
 	StartConferenceOnEnter string `xml:"startConferenceOnEnter,attr,omitempty"`
 	EndConferenceOnExit    string `xml:"endConferenceOnExit,attr,omitempty"`
 	WaitUrl                string `xml:"waitUrl,attr,omitempty"`
+	EventCallbackUrl       string `xml:"eventCallbackUrl,attr,omitempty"`
 	WaitMethod             string `xml:"waitMethod,attr,omitempty"`
 	MaxParticipants        string `xml:"maxParticipants,attr,omitempty"`
 }
