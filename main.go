@@ -26,7 +26,7 @@ func main() {
 	Conf_push := webui.WebSocketWrapper{Push: &push}
 
 	ad_count := make([]int, 3)
-	Conf_adremove := callerhandler.AdWrapper{Push: &push, Ads_Played: ad_count}
+	Conf_adremove := callerhandler.AdWrapper{Push: &push, AdsPlayed: ad_count}
 
 	//Have a function that polls users and queues and dequeues users as necessary
 	go PollWaiters(callers_waiting, &push)
