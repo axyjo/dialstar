@@ -3,7 +3,7 @@ package callerhandler
 import (
 	"bytes"
 	"encoding/xml"
-	"fmt"
+	_ "fmt"
 	"github.com/gorilla/schema"
 	_ "io/ioutil"
 	"net/http"
@@ -92,5 +92,4 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	b.WriteTo(w)
 	//adds the Thingy to the channel with the users's CallSid, City, and Queue flag set to true.
 	c.Callerid <- twiml.Thingy{request.CallSid, request.FromCity, true}
-	fmt.Printf("%.5s was added into the queue\n", request.CallSid)
 }

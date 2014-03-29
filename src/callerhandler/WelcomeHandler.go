@@ -67,7 +67,8 @@ func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 
 	userCount := GetUserCount()
 
-	fmt.Printf("Users Count: %d\n", userCount)
+	fmt.Printf("%.5s has called in\n", request.CallSid)
+	fmt.Printf("There are %d users\n", userCount+1)
 	text := fmt.Sprintf("Welcome to Dial Star! There are %d other users. Press star to skip a user.", userCount)
 	say_response := &twiml.Say{Voice: "female", Language: "en", Loop: 1, Text: text}
 	str, err := xml.Marshal(say_response)
