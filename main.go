@@ -38,7 +38,7 @@ func main() {
 	http.HandleFunc("/welcome/", Conf_newUser.WelcomeHandler)
 	http.HandleFunc("/ad/", Conf_adremove.AdHandler)
 	http.HandleFunc("/webui/websocket", Conf_push.WebSocketHandler)
-	http.HandleFunc("/webui/", webui.WebHandler)
+	http.HandleFunc("/", webui.WebHandler)
 	//Starts the HTTP server at the address Localhost:3000
 
 	port := 3000
