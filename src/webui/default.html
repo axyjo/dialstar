@@ -34,7 +34,7 @@ socket.onmessage = function(msg) {
 };
 
 function createConference(i, conference) {
-	return '<fieldset class="conference"><legend class="conferenceid">Room ' + i + '</legend><div class="caller1">Caller 1: <span class="caller1number" id="' + conference.Call1Id + '">' + conference.Call1Id + '</span></div><div class="caller2" id="' + conference.Call2Id + '">Caller 2: <span class="caller2number">' + conference.Call2Id + '</span></div></fieldset>';
+	return '<fieldset class="conference"><legend class="conferenceid">Room ' + i + '</legend><div class="caller1" id="' + conference.Call1Id + '">Caller 1: <span class="caller1number">' + conference.Call1Id + '</span></div><div class="caller2" id="' + conference.Call2Id + '">Caller 2: <span class="caller2number">' + conference.Call2Id + '</span></div></fieldset>';
 }
 </script>
 <style>
