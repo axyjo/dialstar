@@ -19,13 +19,6 @@ type CallerWrapper struct {
 	Callerid chan twiml.Thingy
 }
 
-type Say struct {
-	XMLName  xml.Name `xml:"Say"`
-	Voice    string   `xml:"voice,attr"`
-	Language string   `xml:"language,attr"`
-	Loop     uint     `xml:"loop,attr"`
-	Text     string   `xml:",chardata"`
-}
 type context struct {
 	b *bytes.Buffer
 	r *http.Request
@@ -70,7 +63,7 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	b := bytes.NewBufferString(start)
-	say_response := &Say{Voice: "female", Language: "en", Loop: 1, Text: "Colin from " + cityName[0]}
+	say_response := &twiml.Say{Voice: "female", Language: "en", Loop: 1, Text: "Colin from " + cityName[0]}
 
 	str, err := xml.Marshal(say_response)
 	if err != nil {

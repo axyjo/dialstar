@@ -1,5 +1,12 @@
 package twiml
 
+type Say struct {
+	Voice    string `xml:"voice,attr"`
+	Language string `xml:"language,attr"`
+	Loop     uint   `xml:"loop,attr"`
+	Text     string `xml:",chardata"`
+}
+
 type Queue struct {
 	Text   string `xml:",chardata"`
 	Url    string `xml:"url,attr,omitempty"`

@@ -19,7 +19,7 @@ func ConferenceHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("[META] - Twilio request to connect " + Conf_id[0])
 	b := bytes.NewBufferString(start)
 	Say_name := r.Form["OtherCity"]
-	say_response := &Say{Voice: "female", Language: "en", Loop: 1, Text: "Connecting to user from " + Say_name[0]}
+	say_response := &twiml.Say{Voice: "female", Language: "en", Loop: 1, Text: "Connecting to user from " + Say_name[0]}
 
 	str, err := xml.Marshal(say_response)
 	if err != nil {
