@@ -49,7 +49,7 @@ func (c WelcomeWrapper) WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 	es_response, err2 := core.Index("hackathon", "logs", "", nil, bytesLine)
 	fmt.Println(es_response)
 	if (err2 != nil) {
-		panic(err2)
+		panic(err2.Error())
 	}
 
 	//Creates a new Buffer with the initial start xml string
