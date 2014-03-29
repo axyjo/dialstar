@@ -1,13 +1,12 @@
 package main
 
 import (
-	"caller_handler"
-	"html/template"
+	"callerhandler"
 	"net/http"
 )
 
 //This is just all the handlers and shit
 func main() {
-	http.HandleFunc("/caller/", caller_handler)
+	http.HandleFunc("/caller/", callerhandler.CallerHandler)
 	http.ListenAndServe(":3000", nil)
 }
