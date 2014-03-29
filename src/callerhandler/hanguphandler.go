@@ -41,13 +41,17 @@ func (c HangUpWrapper) HangUpHandler(w http.ResponseWriter, r *http.Request) {
 	var request StatusCallbackRequest
 	decoder := schema.NewDecoder()
 	decoder.Decode(&request, r.Form)
+
+	userCount := utils.GetUserCount()
+
 	//If the user has hung up, send n new request through the channel to dequeue the user
 	if request.CallStatus == "completed" {
 		c.Callerid <- twiml.Thingy{request.CallSid, "", false, request.From}
 		fmt.Printf("%.6s has hung up\n", request.CallSid)
+		fmt.Printf("There are %d total users\n", userCount-1)
 	}
 
-	pData := webui.PushData{UserCount: utils.GetUserCount()}
+	pData := webui.PushData{UserCount: userCount}
 	if webui.UseNumbers {
 		pData.Call1Id = request.From
 	} else {
