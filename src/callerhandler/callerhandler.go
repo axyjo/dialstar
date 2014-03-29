@@ -6,6 +6,7 @@ import (
 	_ "fmt"
 	_ "io/ioutil"
 	"net/http"
+	"twiml"
 )
 
 const (
@@ -36,9 +37,16 @@ func CallerHandler(w http.ResponseWriter, r *http.Request) {
 	cityName := r.Form["FromCity"]
 	//fmt.Println(actual)
 	b := bytes.NewBufferString(start)
-	response := &Say{Voice: "female", Language: "en", Loop: 0, Text: "Colin from " + cityName[0]}
+	say_response := &Say{Voice: "female", Language: "en", Loop: 1, Text: "Colin from " + cityName[0]}
 
-	str, err := xml.Marshal(response)
+	str, err := xml.Marshal(say_response)
+	if err != nil {
+		panic(err)
+	}
+	b.Write(str)
+	response := &twiml.Conference{Text: "foobar", EndConferenceOnExit: "true"}
+	dial := &twiml.Dial{Conference: *response}
+	str, err = xml.Marshal(dial)
 	if err != nil {
 		panic(err)
 	}
