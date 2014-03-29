@@ -21,7 +21,7 @@ type ActiveUsers struct {
 	Total int `json:"total"`
 }
 
-func GetActiveUsers() int {
+func GetUserCount() int {
 	//Marshal the say_repsonse
 	stats_url := `https://AC6f0fa1837933462d780f6fc1daf57d44:79ed2712d0cf06c87aa2783eee6aaa7a@api.twilio.com/2010-04-01/Accounts/AC6f0fa1837933462d780f6fc1daf57d44/Calls.json?Status=in-progress`
 	resp, err := http.Get(stats_url)
@@ -61,7 +61,7 @@ func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 	//Creates a new Buffer with the initial start xml string
 	b := bytes.NewBufferString(start)
 
-	userCount := GetActiveUsers()
+	userCount := GetUserCount()
 
 	fmt.Println("[META] - Current Active Users: " + fmt.Sprint(userCount))
 	text := "Welcome to Dial Star! There are  " + fmt.Sprint(userCount)
