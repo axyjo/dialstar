@@ -71,7 +71,7 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	b := bytes.NewBufferString(start)
 
 	// Queue an ad.
-	ad_response := &twiml.Play{Text: "https://s3.amazonaws.com/dialstar.uwaterloo.ca/" + fmt.Sprintf(ad_counter) + ".mp3", Loop: "1"}
+	ad_response := &twiml.Play{Text: fmt.Sprintf("https://s3.amazonaws.com/dialstar.uwaterloo.ca/%d.mp3", ad_counter), Loop: "1"}
 	ad_counter++
 	ad_counter %= 3
 
