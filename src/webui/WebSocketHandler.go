@@ -17,6 +17,7 @@ type PushData struct {
 	UserCount int
 	Call1Id   string
 	Call2Id   string
+	Ads       []int
 }
 
 func (c WebSocketWrapper) WebSocketHandler(w http.ResponseWriter, r *http.Request) {
