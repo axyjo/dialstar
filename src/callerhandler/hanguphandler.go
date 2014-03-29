@@ -46,7 +46,7 @@ func (c HangUpWrapper) HangUpHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("%.6s has hung up\n", request.CallSid)
 	}
 
-	userCount := util.GetUserCount()
+	userCount := utils.GetUserCount()
 	for _, j := range *c.Push {
 		j <- webui.PushData{
 			UserCount: userCount,
