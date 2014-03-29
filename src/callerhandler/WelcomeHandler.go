@@ -21,6 +21,10 @@ type ActiveUsers struct {
 	Total int `json:"total"`
 }
 
+type ActiveConferences struct {
+	Total int `json:"total"`
+}
+
 func GetUserCount() int {
 	//Marshal the say_repsonse
 	stats_url := `https://AC6f0fa1837933462d780f6fc1daf57d44:79ed2712d0cf06c87aa2783eee6aaa7a@api.twilio.com/2010-04-01/Accounts/AC6f0fa1837933462d780f6fc1daf57d44/Calls.json?Status=in-progress`
@@ -36,6 +40,23 @@ func GetUserCount() int {
 		panic(err)
 	}
 	return active_users.Total
+}
+
+func GetConferenceCount() int {
+	//Marshal the say_repsonse
+	stats_url := `https://AC6f0fa1837933462d780f6fc1daf57d44:79ed2712d0cf06c87aa2783eee6aaa7a@api.twilio.com/2010-04-01/Accounts/AC6f0fa1837933462d780f6fc1daf57d44/Conferences.json?Status=in-progress`
+	resp, err := http.Get(stats_url)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+	active_conf := &ActiveConferences{}
+	dec := json.NewDecoder(resp.Body)
+	err = dec.Decode(&active_conf)
+	if err != nil {
+		panic(err)
+	}
+	return active_conf.Total
 }
 
 func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
