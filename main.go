@@ -46,11 +46,13 @@ func PollWaiters(c chan twiml.Thingy) {
 
 				values := make(url.Values)
 				values.Set("Url", ConfURLBase+second.Value.(twiml.Thingy).City)
+				fmt.Println(values)
 				_, err := http.PostForm("https://"+accountId+":"+authToken+"@api.twilio.com/2010-04-01/Accounts/"+accountId+"/Calls/"+f, values)
 				if err != nil {
 					panic(err)
 				}
 				values.Set("Url", ConfURLBase+first.Value.(twiml.Thingy).City)
+				fmt.Println(values)
 				_, err = http.PostForm("https://"+accountId+":"+authToken+"@api.twilio.com/2010-04-01/Accounts/"+accountId+"/Calls/"+s, values)
 				if err != nil {
 					panic(err)
