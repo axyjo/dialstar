@@ -36,11 +36,13 @@ func PollWaiters(c chan string) {
 			fmt.Println("[META] Paired " + f + " with " + s)
 
 			ConferenceId := f + s
+			authToken := "79ed2712d0cf06c87aa2783eee6aaa7a"
+			accountId := "AC6f0fa1837933462d780f6fc1daf57d44"
 
 			values := make(url.Values)
 			values.Set("Url", "http://twilio.axyjo.com/conference/?ConferenceId="+ConferenceId+"&OtherCity=Ottawa")
-			http.PostForm("https://api.twilio.com/2010-04-01/Accounts/AC6f0fa1837933462d780f6fc1daf57d44/Calls/"+f, values)
-			http.PostForm("https://api.twilio.com/2010-04-01/Accounts/AC6f0fa1837933462d780f6fc1daf57d44/Calls/"+s, values)
+			http.PostForm("https://"+accountId+":"+authToken+"@api.twilio.com/2010-04-01/Accounts/"+accountId+"/Calls/"+f, values)
+			http.PostForm("https://"+accountId+":"+authToken+"@api.twilio.com/2010-04-01/Accounts/"+accountId+"/Calls/"+s, values)
 		}
 	}
 }
