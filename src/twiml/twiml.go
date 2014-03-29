@@ -56,3 +56,8 @@ type Play struct {
 	Loop   string `xml:"loop,attr,omitempty"`
 	Digits string `xml:"digits,attr,omitempty"`
 }
+
+type Redirect struct {
+	Text   string `xml:",chardata"`
+	Method string `xml:"method,attr,omitempty"`
+}

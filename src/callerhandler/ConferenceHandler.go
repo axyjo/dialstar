@@ -26,9 +26,15 @@ func ConferenceHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	b.Write(str)
-	response := &twiml.Conference{Text: Conf_id[0], EventCallbackUrl: "http://twilio.axyjo.com/caller/"}
+	response := &twiml.Conference{Text: Conf_id[0], EndConferenceOnExit: "true"}
 	dial := &twiml.Dial{Conference: *response}
 	str, err = xml.Marshal(dial)
+	if err != nil {
+		panic(err)
+	}
+	b.Write(str)
+	redirect := &twiml.Redirect{Text: "http://twilio.axyjo.com/caller/"}
+	str, err = xml.Marshal(redirect)
 	if err != nil {
 		panic(err)
 	}
