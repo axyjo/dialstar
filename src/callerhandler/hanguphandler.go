@@ -6,6 +6,7 @@ import (
 	_ "io/ioutil"
 	"net/http"
 	"twiml"
+	"util"
 	"webui"
 )
 
@@ -45,9 +46,10 @@ func (c HangUpWrapper) HangUpHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("%.6s has hung up\n", request.CallSid)
 	}
 
+	userCount := util.GetUserCount()
 	for _, j := range *c.Push {
 		j <- webui.PushData{
-			UserCount: -1,
+			UserCount: userCount,
 			Call1Id:   request.CallSid,
 		}
 	}

@@ -13,7 +13,10 @@ socket.onmessage = function(msg) {
 
 	console.log(data);
 	
-	if(data.UserCount == -1) {
+	if(data != -1) {
+		document.getElementById('usercount').innerText = data.UserCount;
+	}
+	if(data.Call2Id == "") {
 		// hangup
 		var span = document.getElementById(data.Call1Id);
 		if(span) {
@@ -22,11 +25,8 @@ socket.onmessage = function(msg) {
 		}
 	}
 	else {
-		document.getElementById('usercount').innerText = data.UserCount;
-		if(data.Call1Id != "" && data.Call2Id != "") {
-			document.getElementById('conferenceslist').innerHTML += createConference(conferenceId++, data);
-			document.getElementById('conferencecount').innerText = parseInt(document.getElementById('conferencecount').innerText) + 1;
-		}
+		document.getElementById('conferenceslist').innerHTML += createConference(conferenceId++, data);
+		document.getElementById('conferencecount').innerText = parseInt(document.getElementById('conferencecount').innerText) + 1;
 	}
 	
 	//document.getElementById('conferencecount').innerText = Math.floor((data.UserCount - 1) / 2);
