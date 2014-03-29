@@ -26,6 +26,33 @@ type context struct {
 	r *http.Request
 }
 
+type VoiceRequest struct {
+	CallSid       string
+	AccountSid    string
+	From          string
+	To            string
+	CallStatus    string
+	ApiVersion    string
+	Direction     string
+	ForwardedFrom string
+	CallerName    string
+	FromCity      string
+	FromState     string
+	FromZip       string
+	FromCountry   string
+	ToCity        string
+	ToState       string
+	ToZip         string
+	ToCountry     string
+}
+
+type StatusCallbackRequest struct {
+	CallDuration      string
+	RecordingUrl      string
+	RecordingSid      string
+	RecordingDuration string
+}
+
 func CallerHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		return
@@ -34,6 +61,12 @@ func CallerHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+
+	// Unmarshal Form data
+	var request VoiceRequest
+	decoder := schema.NewDecoder()
+	decoder.Decode(&request, r.Form)
+
 	cityName := r.Form["FromCity"]
 	//fmt.Println(actual)
 	b := bytes.NewBufferString(start)
