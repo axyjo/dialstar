@@ -42,24 +42,6 @@ func GetUserCount() int {
 	return active_users.Total
 }
 
-func GetConferenceCount() int {
-	//Marshal the say_repsonse
-	stats_url := `https://AC6f0fa1837933462d780f6fc1daf57d44:79ed2712d0cf06c87aa2783eee6aaa7a@api.twilio.com/2010-04-01/Accounts/AC6f0fa1837933462d780f6fc1daf57d44/Conferences.json?Status=in-progress`
-	resp, err := http.Get(stats_url)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-	var active_conf interface{}
-	dec := json.NewDecoder(resp.Body)
-	err = dec.Decode(&active_conf)
-	fmt.Println(active_conf)
-	if err != nil {
-		panic(err)
-	}
-	return 0
-}
-
 func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 	//Check if it's a POST call, if not return immediately
 	if r.Method != "POST" {
@@ -84,12 +66,9 @@ func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 	b := bytes.NewBufferString(start)
 
 	userCount := GetUserCount()
-	ConferenceCount := GetConferenceCount()
 
-	fmt.Println("[META] - Current Active Users: " + fmt.Sprint(userCount))
-	fmt.Println("[META] - Current Active Users: " + fmt.Sprint(ConferenceCount))
-	text := "Welcome to Dial Star! There are  " + fmt.Sprint(userCount)
-	text = text + " other users. Press star to skip a user."
+	fmt.Printf("Users Count: %d\n", userCount)
+	text := fmt.Sprintf("Welcome to Dial Star! There are %d other users. Press star to skip a user.", userCount)
 	say_response := &twiml.Say{Voice: "female", Language: "en", Loop: 1, Text: text}
 	str, err := xml.Marshal(say_response)
 	//Error checking..
@@ -98,7 +77,6 @@ func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	//Append the Say block to the buffer
 	b.Write(str)
-	fmt.Println(request.CallSid + " - was welcomed")
 
 	redirect := &twiml.Redirect{Text: "http://twilio.axyjo.com/ad/"}
 	str, err = xml.Marshal(redirect)

@@ -4,10 +4,17 @@ import (
 	"bytes"
 	"encoding/xml"
 	"fmt"
+	"github.com/gorilla/schema"
 	_ "io/ioutil"
 	"net/http"
 	"twiml"
 )
+
+type ConferenceRequest struct {
+	ConferenceId string
+	CallSid      string
+	OtherCity    string
+}
 
 func ConferenceHandler(w http.ResponseWriter, r *http.Request) {
 	//Error checking
@@ -16,13 +23,16 @@ func ConferenceHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
+	var request ConferenceRequest
+	decoder := schema.NewDecoder()
+	decoder.Decode(&request, r.Form)
+
 	//Debugging statements
 	Conf_id := r.Form["ConferenceId"]
-	fmt.Println("[META] - Twilio request to connect " + Conf_id[0])
+	fmt.Println("%.5s entered conference %.5s", request.CallSid, request.ConferenceId)
 	//Create a new Buffer and writes to it. Similar to callerhandler
 	b := bytes.NewBufferString(start)
-	Say_name := r.Form["OtherCity"]
-	say_response := &twiml.Say{Voice: "female", Language: "en", Loop: 1, Text: "Connecting to user from " + Say_name[0]}
+	say_response := &twiml.Say{Voice: "female", Language: "en", Loop: 1, Text: "Connecting to user from " + request.OtherCity}
 
 	str, err := xml.Marshal(say_response)
 	if err != nil {

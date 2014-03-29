@@ -15,11 +15,14 @@ var user_queue *list.List
 func main() {
 	//Create a new channel of size 10 (shouldn't get much larger than this)
 	callers_waiting := make(chan twiml.Thingy, 10)
+
 	//Create a new CallerHandler with a CallerWrapper/HangupWrapper with the shared channel callers_waiting
 	Conf_waiters := callerhandler.CallerWrapper{Callerid: callers_waiting}
 	Conf_dequeue := callerhandler.HangUpWrapper{Callerid: callers_waiting}
+
 	//Have a function that polls users and queues and dequeues users as necessary
 	go PollWaiters(callers_waiting)
+
 	//Register the Handle functions for the given patters and appropriate handlers
 	http.HandleFunc("/caller/", Conf_waiters.CallerHandler)
 	http.HandleFunc("/conference/", callerhandler.ConferenceHandler)
@@ -27,7 +30,10 @@ func main() {
 	http.HandleFunc("/welcome/", callerhandler.WelcomeHandler)
 	http.HandleFunc("/ad/", callerhandler.AdHandler)
 	//Starts the HTTP server at the address Localhost:3000
-	http.ListenAndServe(":3000", nil)
+
+	port := 3000
+	fmt.Printf("HTTP server listening on port %d\n", port)
+	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }
 
 func PollWaiters(c chan twiml.Thingy) {
@@ -41,7 +47,6 @@ func PollWaiters(c chan twiml.Thingy) {
 			_ = user_queue.PushBack(element)
 			//If there are 2 or more users in the queue
 			if user_queue.Len() >= 3 {
-				fmt.Println("[META] - Got two or more people.")
 				//Get a pointer to the first element of the queue
 				first := user_queue.Front()
 				f := first.Value.(twiml.Thingy).CallSid
@@ -51,7 +56,7 @@ func PollWaiters(c chan twiml.Thingy) {
 				//remove the first and second user from the queue
 				user_queue.Remove(first)
 				user_queue.Remove(second)
-				fmt.Println("[META] Paired " + f + " with " + s)
+				fmt.Printf("Created a new conference for %.5s and %.5s\n", f, s)
 				//Concatenate the first and second user's CallSid to be used in the ConfURL
 				ConferenceId := f + s
 				ConfURLBase := "http://twilio.axyjo.com/conference/?ConferenceId=" + ConferenceId + "&OtherCity="
