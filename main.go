@@ -28,29 +28,31 @@ func PollWaiters(c chan twiml.Thingy) {
 
 	for element := range c {
 		if element.Add {
-			_ = user_queue.PushBack(element.CallSid)
+			_ = user_queue.PushBack(element)
 			if user_queue.Len() >= 2 {
 				fmt.Println("[META] - Got two or more people.")
 				first := user_queue.Front()
 				user_queue.Remove(first)
-				f := first.Value.(string)
+				f := first.Value.(twiml.Thingy).CallSid
 				second := user_queue.Front()
 				user_queue.Remove(second)
-				s := second.Value.(string)
+				s := second.Value.(twiml.Thingy).CallSid
 				fmt.Println("[META] Paired " + f + " with " + s)
 
 				ConferenceId := f + s
+				ConfURLBase := "http://twilio.axyjo.com/conference/?ConferenceId=" + ConferenceId + "&OtherCity="
 				authToken := "79ed2712d0cf06c87aa2783eee6aaa7a"
 				accountId := "AC6f0fa1837933462d780f6fc1daf57d44"
 
 				values := make(url.Values)
-				values.Set("Url", "http://twilio.axyjo.com/conference/?ConferenceId="+ConferenceId+"&OtherCity=Ottawa")
+				values.Set("Url", ConfURLBase+second.Value.(twiml.Thingy).City)
 				http.PostForm("https://"+accountId+":"+authToken+"@api.twilio.com/2010-04-01/Accounts/"+accountId+"/Calls/"+f, values)
+				values.Set("Url", ConfURLBase+first.Value.(twiml.Thingy).City)
 				http.PostForm("https://"+accountId+":"+authToken+"@api.twilio.com/2010-04-01/Accounts/"+accountId+"/Calls/"+s, values)
 			}
 		} else {
 			for i := user_queue.Front(); i != nil; i = i.Next() {
-				if i.Value.(string) == element.CallSid {
+				if i.Value.(twiml.Thingy).CallSid == element.CallSid {
 					user_queue.Remove(i)
 					break
 				}

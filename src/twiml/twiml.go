@@ -22,6 +22,7 @@ type Dial struct {
 
 type Thingy struct {
 	CallSid string
+	City    string
 	Add     bool
 }
 

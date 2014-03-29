@@ -36,7 +36,7 @@ func (c HangUpWrapper) HangUpHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := schema.NewDecoder()
 	decoder.Decode(&request, r.Form)
 	if request.CallStatus == "completed" {
-		c.Callerid <- twiml.Thingy{request.CallSid, false}
+		c.Callerid <- twiml.Thingy{request.CallSid, "", false}
 		fmt.Println(request.CallSid + " - deQueued")
 	}
 }

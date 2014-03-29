@@ -84,6 +84,6 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	b.Write(str)
 	b.WriteString(end)
 	b.WriteTo(w)
-	c.Callerid <- twiml.Thingy{r.Form["CallSid"][0], true}
-	fmt.Println(r.Form["CallSid"][0] + " - Queued")
+	c.Callerid <- twiml.Thingy{request.CallSid, request.FromCity, true}
+	fmt.Println(request.CallSid + " - Queued")
 }
