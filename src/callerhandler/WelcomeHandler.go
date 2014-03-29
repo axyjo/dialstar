@@ -100,7 +100,7 @@ func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 	b.Write(str)
 	fmt.Println(request.CallSid + " - was welcomed")
 
-	redirect := &twiml.Redirect{Text: "http://twilio.axyjo.com/caller/"}
+	redirect := &twiml.Redirect{Text: "http://twilio.axyjo.com/ad/"}
 	str, err = xml.Marshal(redirect)
 	if err != nil {
 		panic(err)

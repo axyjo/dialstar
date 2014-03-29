@@ -25,6 +25,7 @@ func main() {
 	http.HandleFunc("/conference/", callerhandler.ConferenceHandler)
 	http.HandleFunc("/hangup/", Conf_dequeue.HangUpHandler)
 	http.HandleFunc("/welcome/", callerhandler.WelcomeHandler)
+	http.HandleFunc("/ad/", callerhandler.AdHandler)
 	//Starts the HTTP server at the address Localhost:3000
 	http.ListenAndServe(":3000", nil)
 }

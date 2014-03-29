@@ -37,7 +37,7 @@ func ConferenceHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	b.Write(str)
-	redirect := &twiml.Redirect{Text: "http://twilio.axyjo.com/caller/"}
+	redirect := &twiml.Redirect{Text: "http://twilio.axyjo.com/ad/"}
 	str, err = xml.Marshal(redirect)
 	if err != nil {
 		panic(err)
