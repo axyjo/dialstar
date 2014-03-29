@@ -8,7 +8,6 @@ import (
 	_ "io/ioutil"
 	"net/http"
 	"twiml"
-	"webui"
 )
 
 //start and end of the xml sent to Twilio
