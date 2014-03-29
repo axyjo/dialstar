@@ -4,3 +4,6 @@
 [submodule "src/github.com/gorilla/websocket"]
 	path = src/github.com/gorilla/websocket
 	url = https://github.com/gorilla/websocket
+[submodule "src/github.com/mattbaird/elastigo"]
+	path = src/github.com/mattbaird/elastigo
+	url = https://github.com/mattbaird/elastigo
