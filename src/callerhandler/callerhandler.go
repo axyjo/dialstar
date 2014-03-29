@@ -72,10 +72,10 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := schema.NewDecoder()
 	decoder.Decode(&request, r.Form)
 
-	cityName := r.Form["FromCity"]
+	cityName := request.FromCity
 	//fmt.Println(actual)
 	b := bytes.NewBufferString(start)
-	say_response := &Say{Voice: "female", Language: "en", Loop: 1, Text: "Colin from " + cityName[0]}
+	say_response := &Say{Voice: "female", Language: "en", Loop: 1, Text: "Colin from " + cityName}
 
 	str, err := xml.Marshal(say_response)
 	if err != nil {
@@ -90,6 +90,6 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	b.Write(str)
 	b.WriteString(end)
 	b.WriteTo(w)
-	c.Callerid <- r.Form["CallSid"][0]
+	c.Callerid <- request.CallSid
 
 }
