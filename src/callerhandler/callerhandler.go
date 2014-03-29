@@ -3,11 +3,12 @@ package callerhandler
 import (
 	"bytes"
 	"encoding/xml"
-	_ "fmt"
+	"fmt"
 	"github.com/gorilla/schema"
 	_ "io/ioutil"
 	"net/http"
 	"twiml"
+	"webui"
 )
 
 //start and end of the xml sent to Twilio
@@ -19,6 +20,12 @@ const (
 //CallerWrapper which holds a channel the interface Thingy
 type CallerWrapper struct {
 	Callerid chan twiml.Thingy
+	Push     *[]chan webui.PushData
+}
+
+type context struct {
+	b *bytes.Buffer
+	r *http.Request
 }
 
 //Holds information about the user calling in
@@ -68,6 +75,8 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	//Creates a new Buffer with the initial start xml string
 	b := bytes.NewBufferString(start)
 
+	//Marshal the say_repsonse
+
 	//say_response := &twiml.Say{Voice: "female", Language: "en", Loop: 1, Text: "Welcome to Dial Star, There are currently  " + cityName[0]}
 	//str, err := xml.Marshal(say_response)
 	////Error checking..
@@ -92,4 +101,12 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	b.WriteTo(w)
 	//adds the Thingy to the channel with the users's CallSid, City, and Queue flag set to true.
 	c.Callerid <- twiml.Thingy{request.CallSid, request.FromCity, true}
+	fmt.Println(request.CallSid + " - Queued")
+
+	for _, j := range *c.Push {
+		j <- webui.PushData{
+			UserCount: -1,
+			Call1Id:   request.CallSid,
+		}
+	}
 }

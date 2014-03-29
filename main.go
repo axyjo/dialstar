@@ -20,8 +20,8 @@ func main() {
 	push := make([]chan webui.PushData, 0)
 
 	//Create a new CallerHandler with a CallerWrapper/HangupWrapper with the shared channel callers_waiting
-	Conf_waiters := callerhandler.CallerWrapper{Callerid: callers_waiting}
-	Conf_dequeue := callerhandler.HangUpWrapper{Callerid: callers_waiting, Push: &push}
+	Conf_waiters := callerhandler.CallerWrapper{Callerid: callers_waiting, Push: &push}
+	Conf_dequeue := callerhandler.HangUpWrapper{Callerid: callers_waiting}
 	Conf_newUser := callerhandler.WelcomeWrapper{Push: &push}
 	Conf_push := webui.WebSocketWrapper{Push: &push}
 
