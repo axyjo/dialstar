@@ -23,25 +23,48 @@ socket.onmessage = function(msg) {
 };
 
 function createConference(i, conference) {
-	return '<div class="conference"><div class="conferenceid">Room ' + i + '</div><div class="caller1">Caller 1: <span class="caller1number">' + conference.Caller1 + '</span></div><div class="caller2">Caller 2: <span class="caller2number">' + conference.Caller2 + '</span></div></div>';
+	return '<fieldset class="conference"><legend class="conferenceid">Room ' + i + '</legend><div class="caller1">Caller 1: <span class="caller1number">' + conference.Caller1 + '</span></div><div class="caller2">Caller 2: <span class="caller2number">' + conference.Caller2 + '</span></div></fieldset>';
 }
 </script>
 <style>
+html, body {
+	color: white;
+	background: black;
+	margin: 0;
+	
+}
 .conference {
 	display: inline-block;
 	margin-right: 20px;
 	padding: 10px;
-	border: 1px solid black;
+}
+#banner {
+	background: #5555ff;
+	color: white;
+	font-size: 32pt;
+	padding: 15px;
+	border-bottom: 5px solid #2222ff;
+}
+#banner span {
+	font-family: serif;
+	color: #FFDF00;
+	font-weight: bold;
+}
+#content {
+	padding: 5px;
 }
 </style>
 </head>
 <body>
+<div id="banner"><img alt="" src="http://i.imgur.com/JfTBGuK.png">::Dial<span>Star</span>::</div>
+<div id="content">
 <h1>Users</h1>
 <h2 id="users">
 	There are currently <span id="usercount">0</span> users connected.
 </h2>
 <h1>Conferences</h1>
 <div id="conferences">
+</div>
 </div>
 </body>
 </html>
