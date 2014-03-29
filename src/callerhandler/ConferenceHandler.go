@@ -3,7 +3,7 @@ package callerhandler
 import (
 	"bytes"
 	"encoding/xml"
-	"fmt"
+	_ "fmt"
 	"github.com/gorilla/schema"
 	_ "io/ioutil"
 	"net/http"
@@ -28,8 +28,6 @@ func ConferenceHandler(w http.ResponseWriter, r *http.Request) {
 	decoder.Decode(&request, r.Form)
 
 	//Debugging statements
-	Conf_id := r.Form["ConferenceId"]
-	fmt.Println("%.6s entered conference %.6s", request.CallSid, request.ConferenceId)
 	//Create a new Buffer and writes to it. Similar to callerhandler
 	b := bytes.NewBufferString(start)
 	say_response := &twiml.Say{Voice: "female", Language: "en", Loop: 1, Text: "Connecting to user from " + request.OtherCity}
@@ -40,7 +38,7 @@ func ConferenceHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	b.Write(str)
 	//End the conference on exit
-	response := &twiml.Conference{Text: Conf_id[0], EndConferenceOnExit: "true"}
+	response := &twiml.Conference{Text: request.ConferenceId, EndConferenceOnExit: "true"}
 	dial := &twiml.Dial{Conference: *response, HangupOnStar: "true"}
 	str, err = xml.Marshal(dial)
 	if err != nil {
