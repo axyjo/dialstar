@@ -15,8 +15,11 @@ socket.onmessage = function(msg) {
 	
 	if(data.UserCount == -1) {
 		// hangup
-		document.getElementById(data.Call1Id).parentElement.parentElement.remove();
-		document.getElementById('conferencecount').innerText = parseInt(document.getElementById('conferencecount').innerText) - 1;
+		var span = document.getElementById(data.Call1Id);
+		if(span) {
+			span.parentElement.parentElement.remove();
+			document.getElementById('conferencecount').innerText = parseInt(document.getElementById('conferencecount').innerText) - 1;
+		}
 	}
 	else {
 		document.getElementById('usercount').innerText = data.UserCount;
