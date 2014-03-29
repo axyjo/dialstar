@@ -11,8 +11,6 @@ import (
 	"twiml"
 	"utils"
 	"webui"
-	"github.com/mattbaird/elastigo/api"
-	"github.com/mattbaird/elastigo/core"
 )
 
 type WelcomeWrapper struct {
@@ -39,17 +37,13 @@ func (c WelcomeWrapper) WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := schema.NewDecoder()
 	decoder.Decode(&request, r.Form)
 
-	// Set up ES host/port.
-	api.Domain = "twilio.axyjo.com"
-	api.Port = "9200"
-
-
 	// Store the information from the request into ElasticSearch for analytics
 	bytesLine, err := json.Marshal(request)
-	es_response, err2 := core.Index("hackathon", "logs", "", nil, bytesLine)
-	fmt.Println(es_response)
-	if (err2 != nil) {
-		panic(err2.Error())
+	url := "http://twilio.axyjo.com:9200/hackathon/logs/"
+	body := bytes.NewBuffer(bytesLine)
+	_, err = http.Post(url, "application/json", body)
+	if err != nil {
+		panic(err)
 	}
 
 	//Creates a new Buffer with the initial start xml string
