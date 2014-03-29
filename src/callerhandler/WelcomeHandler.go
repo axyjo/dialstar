@@ -83,8 +83,10 @@ func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 	b := bytes.NewBufferString(start)
 
 	userCount := GetUserCount()
+	ConferenceCount := GetConferenceCount()
 
 	fmt.Println("[META] - Current Active Users: " + fmt.Sprint(userCount))
+	fmt.Println("[META] - Current Active Users: " + fmt.Sprint(ConferenceCount))
 	text := "Welcome to Dial Star! There are  " + fmt.Sprint(userCount)
 	text = text + " other users. Press star to skip a user."
 	say_response := &twiml.Say{Voice: "female", Language: "en", Loop: 1, Text: text}
