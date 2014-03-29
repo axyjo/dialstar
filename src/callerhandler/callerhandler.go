@@ -3,7 +3,7 @@ package callerhandler
 import (
 	"bytes"
 	"encoding/xml"
-	_ "fmt"
+	"fmt"
 	"github.com/gorilla/schema"
 	_ "io/ioutil"
 	"net/http"
@@ -82,7 +82,8 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	b.Write(str)
-	response := &twiml.Play{Text: "https://api.twilio.com/cowbell.mp3", Loop: "0"}
+	fmt.Println(r.Form["CallSid"][0] + " - " + " call initiated from " + r.Form["From"][0])
+	response := &twiml.Play{Text: "https://api.twilio.com/cowbell.mp3", Loop: "1"}
 	str, err = xml.Marshal(response)
 	if err != nil {
 		panic(err)
@@ -91,5 +92,5 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	b.WriteString(end)
 	b.WriteTo(w)
 	c.Callerid <- request.CallSid
-
+	fmt.Println(request.CallSid + " - Queued")
 }

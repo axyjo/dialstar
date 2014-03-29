@@ -3,6 +3,7 @@ package main
 import (
 	"callerhandler"
 	"container/list"
+	"fmt"
 	"net/http"
 	"net/url"
 )
@@ -13,10 +14,10 @@ var user_queue *list.List
 func main() {
 	callers_waiting := make(chan string, 10)
 	Conf_waiters := callerhandler.CallerWrapper{Callerid: callers_waiting}
+	go PollWaiters(callers_waiting)
 	http.HandleFunc("/caller/", Conf_waiters.CallerHandler)
 	http.HandleFunc("/conference/", callerhandler.ConferenceHandler)
 	http.ListenAndServe(":3000", nil)
-	go PollWaiters(callers_waiting)
 }
 
 func PollWaiters(c chan string) {
@@ -24,13 +25,15 @@ func PollWaiters(c chan string) {
 
 	for element := range c {
 		_ = user_queue.PushBack(element)
-		if user_queue.Len() > 2 {
+		if user_queue.Len() >= 2 {
+			fmt.Println("[META] - Got two or more people.")
 			first := user_queue.Front()
 			user_queue.Remove(first)
 			f := first.Value.(string)
 			second := user_queue.Front()
 			user_queue.Remove(second)
 			s := second.Value.(string)
+			fmt.Println("[META] Paired " + f + " with " + s)
 
 			ConferenceId := f + s
 
