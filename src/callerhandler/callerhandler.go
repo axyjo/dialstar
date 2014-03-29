@@ -31,23 +31,23 @@ type context struct {
 
 //Holds information about the user calling in
 type VoiceRequest struct {
-	CallSid       string
-	AccountSid    string
-	From          string
-	To            string
-	CallStatus    string
-	ApiVersion    string
-	Direction     string
-	ForwardedFrom string
-	CallerName    string
-	FromCity      string
-	FromState     string
-	FromZip       string
-	FromCountry   string
-	ToCity        string
-	ToState       string
-	ToZip         string
-	ToCountry     string
+    CallSid       string `json:"CallSid"`
+    AccountSid    string `json:"AccountSid"`
+    From          string `json:"From"`
+    To            string `json:"To"`
+    CallStatus    string `json:"CallStatus"`
+    ApiVersion    string `json:"ApiVersion"`
+    Direction     string `json:"Direction"`
+    ForwardedFrom string `json:"ForwardedFrom"`
+    CallerName    string `json:"CallerName"`
+    FromCity      string `json:"FromCity"`
+    FromState     string `json:"FromState"`
+    FromZip       string `json:"FromZip"`
+    FromCountry   string `json:"FromCountry"`
+    ToCity        string `json:"ToCity"`
+    ToState       string `json:"ToState"`
+    ToZip         string `json:"ToZip"`
+    ToCountry     string `json:"ToCountry"`
 }
 
 func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
