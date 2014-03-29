@@ -64,7 +64,7 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := schema.NewDecoder()
 	decoder.Decode(&request, r.Form)
 	//Store the city name of the user making the call
-	cityName := r.Form["FromCity"]
+	//cityName := r.Form["FromCity"]
 	//fmt.Println(actual)
 	if request.CallStatus == "completed" {
 		return
@@ -74,19 +74,20 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	b := bytes.NewBufferString(start)
 
 	//Marshal the say_repsonse
-	say_response := &twiml.Say{Voice: "female", Language: "en", Loop: 1, Text: "Colin from " + cityName[0]}
-	str, err := xml.Marshal(say_response)
-	//Error checking..
-	if err != nil {
-		panic(err)
-	}
+
+	//say_response := &twiml.Say{Voice: "female", Language: "en", Loop: 1, Text: "Welcome to Dial Star, There are currently  " + cityName[0]}
+	//str, err := xml.Marshal(say_response)
+	////Error checking..
+	//if err != nil {
+	//	panic(err)
+	//}
 	//Append the Say block to the buffer
-	b.Write(str)
-	fmt.Println(r.Form["CallSid"][0] + " - " + " call initiated from " + r.Form["From"][0])
+	//b.Write(str)
+	//fmt.Println(r.Form["CallSid"][0] + " - " + " call initiated from " + r.Form["From"][0])
 	//Play Cowbell until user is matched
-	response := &twiml.Play{Text: "https://api.twilio.com/cowbell.mp3", Loop: "1"}
+	response := &twiml.Play{Text: "http://com.twilio.music.classical.s3.amazonaws.com/ClockworkWaltz.mp3", Loop: "1"}
 	//Marshal the response
-	str, err = xml.Marshal(response)
+	str, err := xml.Marshal(response)
 	if err != nil {
 		panic(err)
 	}
