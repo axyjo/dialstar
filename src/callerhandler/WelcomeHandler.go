@@ -50,13 +50,14 @@ func GetConferenceCount() int {
 		panic(err)
 	}
 	defer resp.Body.Close()
-	active_conf := &ActiveConferences{}
+	var active_conf interface{}
 	dec := json.NewDecoder(resp.Body)
 	err = dec.Decode(&active_conf)
+	fmt.Println(active_conf)
 	if err != nil {
 		panic(err)
 	}
-	return active_conf.Total
+	return 0
 }
 
 func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
