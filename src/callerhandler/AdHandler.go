@@ -2,6 +2,7 @@ package callerhandler
 
 import (
 	"bytes"
+	"encoding/json"
 	"encoding/xml"
 	"fmt"
 	"github.com/gorilla/schema"
@@ -9,6 +10,8 @@ import (
 	"net/http"
 	"twiml"
 	"webui"
+	"github.com/mattbaird/elastigo/api"
+	"github.com/mattbaird/elastigo/core"
 )
 
 type AdWrapper struct {
@@ -34,9 +37,20 @@ func (c AdWrapper) AdHandler(w http.ResponseWriter, r *http.Request) {
 	var request VoiceRequest
 	decoder := schema.NewDecoder()
 	decoder.Decode(&request, r.Form)
-	//Store the city name of the user making the call
-	//cityName := r.Form["FromCity"]
-	//fmt.Println(actual)
+
+	// Set up ES host/port.
+	api.Domain = "twilio.axyjo.com"
+	api.Port = "9200"
+
+
+	// Store the information from the request into ElasticSearch for analytics
+	bytesLine, err := json.Marshal(request)
+	es_response, err2 := core.Index("hackathon", "logs", "", nil, bytesLine)
+	fmt.Println(es_response)
+	if (err2 != nil) {
+		panic(err2)
+	}
+
 	if request.CallStatus == "completed" {
 		return
 	}

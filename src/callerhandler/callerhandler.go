@@ -56,11 +56,6 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Set up ES host/port.
-	api.Domain = "twilio.axyjo.com"
-	api.Port = "9200"
-
-
 	//Error handling
 	err := r.ParseForm()
 	if err != nil {
@@ -72,6 +67,11 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := schema.NewDecoder()
 	decoder.Decode(&request, r.Form)
 
+	// Set up ES host/port.
+	api.Domain = "twilio.axyjo.com"
+	api.Port = "9200"
+
+
 	// Store the information from the request into ElasticSearch for analytics
 	bytesLine, err := json.Marshal(request)
 	es_response, err2 := core.Index("hackathon", "logs", "", nil, bytesLine)
@@ -79,7 +79,6 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	if (err2 != nil) {
 		panic(err2)
 	}
-
 
 	if request.CallStatus == "completed" {
 		return
