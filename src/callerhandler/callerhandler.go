@@ -74,9 +74,10 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Store the information from the request into ElasticSearch for analytics
 	bytesLine, err := json.Marshal(request)
-	_, err = core.Index("hackathon", "logs", "", nil, bytesLine)
-	if (err != nil) {
-		panic(err)
+	es_response, err2 := core.Index("hackathon", "logs", "", nil, bytesLine)
+	fmt.Println(es_response)
+	if (err2 != nil) {
+		panic(err2)
 	}
 
 
