@@ -31,7 +31,7 @@ func ConferenceHandler(w http.ResponseWriter, r *http.Request) {
 	b.Write(str)
 	//End the conference on exit
 	response := &twiml.Conference{Text: Conf_id[0], EndConferenceOnExit: "true"}
-	dial := &twiml.Dial{Conference: *response}
+	dial := &twiml.Dial{Conference: *response, HangupOnStar: "true"}
 	str, err = xml.Marshal(dial)
 	if err != nil {
 		panic(err)
