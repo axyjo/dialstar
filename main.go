@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"twiml"
+	"webui"
 )
 
 var user_queue *list.List
@@ -15,13 +16,15 @@ var user_queue *list.List
 func main() {
 	//Create a new channel of size 10 (shouldn't get much larger than this)
 	callers_waiting := make(chan twiml.Thingy, 10)
+	push := make(chan bool, 10)
 
 	//Create a new CallerHandler with a CallerWrapper/HangupWrapper with the shared channel callers_waiting
 	Conf_waiters := callerhandler.CallerWrapper{Callerid: callers_waiting}
 	Conf_dequeue := callerhandler.HangUpWrapper{Callerid: callers_waiting}
+	Conf_push := webui.WebSocketWrapper{Push: push}
 
 	//Have a function that polls users and queues and dequeues users as necessary
-	go PollWaiters(callers_waiting)
+	go PollWaiters(callers_waiting, push)
 
 	//Register the Handle functions for the given patters and appropriate handlers
 	http.HandleFunc("/caller/", Conf_waiters.CallerHandler)
@@ -29,6 +32,8 @@ func main() {
 	http.HandleFunc("/hangup/", Conf_dequeue.HangUpHandler)
 	http.HandleFunc("/welcome/", callerhandler.WelcomeHandler)
 	http.HandleFunc("/ad/", callerhandler.AdHandler)
+	http.HandleFunc("/webui/websocket", Conf_push.WebSocketHandler)
+	http.HandleFunc("/webui/", webui.WebHandler)
 	//Starts the HTTP server at the address Localhost:3000
 
 	port := 3000
@@ -36,7 +41,7 @@ func main() {
 	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }
 
-func PollWaiters(c chan twiml.Thingy) {
+func PollWaiters(c chan twiml.Thingy, p chan bool) {
 	//Creates an empty queue to put users in
 	user_queue = list.New()
 	//Iterates over each element in the channel
@@ -81,6 +86,7 @@ func PollWaiters(c chan twiml.Thingy) {
 				if err != nil {
 					panic(err)
 				}
+				p <- true
 			}
 		} else {
 			//Otherwise the user is to be dequeued.
@@ -88,6 +94,7 @@ func PollWaiters(c chan twiml.Thingy) {
 			for i := user_queue.Front(); i != nil; i = i.Next() {
 				if i.Value.(twiml.Thingy).CallSid == element.CallSid {
 					user_queue.Remove(i)
+					p <- true
 					break
 				}
 			}

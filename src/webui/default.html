@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>DialStar</title>
+<script type="text/javascript">
+var socket = new WebSocket("ws://localhost:3000/webui/websocket");
+
+socket.onmessage = function(msg) {
+	var data = JSON.parse(msg.data);
+
+	console.log(data);
+	
+	document.getElementById('usercount').innerText = data.UserCount;
+	
+	var conferences = "";
+	
+	for(var i = 0; i < data.Conferences.length; ++i) {
+		conferences += createConference(i, data.Conferences[i]);
+	}
+	
+	document.getElementById('conferences').innerHTML = conferences;
+};
+
+function createConference(i, conference) {
+	return '<div class="conference"><div class="conferenceid">Room ' + i + '</div><div class="caller1">Caller 1: <span class="caller1number">' + conference.Caller1 + '</span></div><div class="caller2">Caller 2: <span class="caller2number">' + conference.Caller2 + '</span></div></div>';
+}
+</script>
+<style>
+.conference {
+	display: inline-block;
+	margin-right: 20px;
+	padding: 10px;
+	border: 1px solid black;
+}
+</style>
+</head>
+<body>
+<h1>Users</h1>
+<h2 id="users">
+	There are currently <span id="usercount">0</span> users connected.
+</h2>
+<h1>Conferences</h1>
+<div id="conferences">
+</div>
+</body>
+</html>
