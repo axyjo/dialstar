@@ -15,8 +15,7 @@ socket.onmessage = function(msg) {
 	
 	if(data.UserCount == -1) {
 		// hangup
-		console.log(document.getElementById(data.Call1Id).parentElement);
-		//document.getElementById(data.Call1Id).parentElement.remove();
+		document.getElementById(data.Call1Id).parentElement.parentElement.remove();
 		document.getElementById('conferencecount').innerText = parseInt(document.getElementById('conferencecount').innerText) - 1;
 	}
 	else {
@@ -54,7 +53,7 @@ html, body {
 	padding: 15px;
 	border-bottom: 5px solid #2222ff;
 }
-#banner span {
+#star {
 	font-family: serif;
 	color: #FFDF00;
 	font-weight: bold;
@@ -65,7 +64,7 @@ html, body {
 </style>
 </head>
 <body>
-<div id="banner"><img alt="" src="http://i.imgur.com/JfTBGuK.png">::Dial<span>Star</span>::</div>
+<div id="banner"><img alt="" src="http://i.imgur.com/JfTBGuK.png">::Dial<span id="star">Star</span>::<span class="phonenumber">+1(226)270-1006</span></div>
 <div id="content">
 <h1>Users</h1>
 <h2 id="users">
