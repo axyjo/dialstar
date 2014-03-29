@@ -30,10 +30,11 @@ func CallerHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	body, err := ioutil.ReadAll(r.Body)
+	actual := string(body)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(body)
+	fmt.Println(actual)
 	b := bytes.NewBufferString(start)
 	response := &Say{Voice: "female", Language: "en", Loop: 0, Text: "Colin"}
 
