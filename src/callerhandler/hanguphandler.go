@@ -23,9 +23,11 @@ type HangUpWrapper struct {
 }
 
 func (c HangUpWrapper) HangUpHandler(w http.ResponseWriter, r *http.Request) {
+	//Check if it's a POST call, if not return immediately
 	if r.Method != "POST" {
 		return
 	}
+	//Error checking
 	err := r.ParseForm()
 	if err != nil {
 		panic(err)
@@ -35,6 +37,7 @@ func (c HangUpWrapper) HangUpHandler(w http.ResponseWriter, r *http.Request) {
 	var request StatusCallbackRequest
 	decoder := schema.NewDecoder()
 	decoder.Decode(&request, r.Form)
+	//If the user has hung up, send n new request through the channel to dequeue the user
 	if request.CallStatus == "completed" {
 		c.Callerid <- twiml.Thingy{request.CallSid, "", false}
 		fmt.Println(request.CallSid + " - deQueued")
