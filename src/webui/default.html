@@ -12,7 +12,7 @@ socket.onmessage = function(msg) {
 	console.log(data);
 	
 	document.getElementById('usercount').innerText = data.UserCount;
-	document.getElementById('conferencecount').innerText = data.UserCount / 2;
+	document.getElementById('conferencecount').innerText = Math.floor(data.UserCount / 2);
 	
 	var conferences = "";
 	/*

@@ -9,13 +9,17 @@ import (
 	"net/http"
 	"twiml"
 	"utils"
+	"webui"
 )
 
-//start and end of the xml sent to Twilio
+type WelcomeWrapper struct {
+	Push *[]chan webui.PushData
+}
 
+//start and end of the xml sent to Twilio
 //CallerWrapper which holds a channel the interface Thingy
 
-func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
+func (c WelcomeWrapper) WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 	//Check if it's a POST call, if not return immediately
 	if r.Method != "POST" {
 		return
@@ -62,4 +66,11 @@ func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 	b.WriteString(end)
 	//Write the Buffer to the http.ResponseWriter
 	b.WriteTo(w)
+	for _, j := range *c.Push {
+		j <- webui.PushData{
+			UserCount: userCount,
+			Call1Id:   request.CallSid,
+		}
+	}
+
 }
