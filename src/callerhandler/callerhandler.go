@@ -3,6 +3,8 @@ package callerhandler
 import (
 	"bytes"
 	"encoding/xml"
+	"fmt"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -24,6 +26,14 @@ type context struct {
 }
 
 func CallerHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		return
+	}
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(body)
 	b := bytes.NewBufferString(start)
 	response := &Say{Voice: "female", Language: "en", Loop: 0, Text: "Colin"}
 
