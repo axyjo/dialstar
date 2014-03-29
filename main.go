@@ -38,18 +38,17 @@ func PollWaiters(c chan twiml.Thingy) {
 			//Push the user onto the queue
 			_ = user_queue.PushBack(element)
 			//If there are 2 or more users in the queue
-			if user_queue.Len() >= 2 {
+			if user_queue.Len() >= 3 {
 				fmt.Println("[META] - Got two or more people.")
 				//Get a pointer to the first element of the queue
 				first := user_queue.Front()
-				//Remove the first user from the queue
-				user_queue.Remove(first)
 				f := first.Value.(twiml.Thingy).CallSid
-				//Get a pointer to the second user (now at the front)
-				second := user_queue.Front()
-				//remove the second user from the queue
-				user_queue.Remove(second)
+				//Get a pointer to the second user who's in the third position in the queue to prevent call repetition
+				second := user_queue.Front().Next().Next()
 				s := second.Value.(twiml.Thingy).CallSid
+				//remove the first and second user from the queue
+				user_queue.Remove(first)
+				user_queue.Remove(second)
 				fmt.Println("[META] Paired " + f + " with " + s)
 				//Concatenate the first and second user's CallSid to be used in the ConfURL
 				ConferenceId := f + s
