@@ -18,7 +18,7 @@ import (
 //Holds information about the user calling in
 
 type Marshal struct {
-	total int
+	total interface{}
 }
 
 func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
@@ -53,11 +53,12 @@ func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 	defer resp.Body.Close()
 	active_users := &Marshal{}
 	dec := json.NewDecoder(resp.Body)
-	err = dec.Decode(&active_users)
+	err = dec.Decode(&active_users.total)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("[META] - Current Active Users: " + string(active_users.total))
+	fmt.Println(fmt.Sprint(resp.Body))
+	fmt.Println("[META] - Current Active Users: " + fmt.Sprint(active_users.total))
 	text := "Welcome to Dial Star! There are  " + fmt.Sprint(active_users.total)
 	text = text + " other users. Press star to skip a user."
 	say_response := &twiml.Say{Voice: "female", Language: "en", Loop: 1, Text: text}
