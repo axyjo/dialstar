@@ -21,11 +21,6 @@ type CallerWrapper struct {
 	Callerid chan twiml.Thingy
 }
 
-type context struct {
-	b *bytes.Buffer
-	r *http.Request
-}
-
 //Holds information about the user calling in
 type VoiceRequest struct {
 	CallSid       string
