@@ -3,8 +3,8 @@ package callerhandler
 import (
 	"bytes"
 	"encoding/xml"
-	"fmt"
-	"io/ioutil"
+	_ "fmt"
+	_ "io/ioutil"
 	"net/http"
 )
 
@@ -29,14 +29,14 @@ func CallerHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		return
 	}
-	body, err := ioutil.ReadAll(r.Body)
-	actual := string(body)
+	err := r.ParseForm()
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(actual)
+	cityName := r.Form["FromCity"]
+	//fmt.Println(actual)
 	b := bytes.NewBufferString(start)
-	response := &Say{Voice: "female", Language: "en", Loop: 0, Text: "Colin"}
+	response := &Say{Voice: "female", Language: "en", Loop: 0, Text: "Colin from " + cityName[0]}
 
 	str, err := xml.Marshal(response)
 	if err != nil {
