@@ -16,7 +16,7 @@ const (
 )
 
 type CallerWrapper struct {
-	Callerid chan string
+	Callerid chan twiml.Thingy
 }
 
 type Say struct {
@@ -51,13 +51,6 @@ type VoiceRequest struct {
 	ToCountry     string
 }
 
-type StatusCallbackRequest struct {
-	CallDuration      string
-	RecordingUrl      string
-	RecordingSid      string
-	RecordingDuration string
-}
-
 func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		return
@@ -72,10 +65,10 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := schema.NewDecoder()
 	decoder.Decode(&request, r.Form)
 
-	cityName := request.FromCity
+	cityName := r.Form["FromCity"]
 	//fmt.Println(actual)
 	b := bytes.NewBufferString(start)
-	say_response := &Say{Voice: "female", Language: "en", Loop: 1, Text: "Colin from " + cityName}
+	say_response := &Say{Voice: "female", Language: "en", Loop: 1, Text: "Colin from " + cityName[0]}
 
 	str, err := xml.Marshal(say_response)
 	if err != nil {
@@ -91,6 +84,6 @@ func (c CallerWrapper) CallerHandler(w http.ResponseWriter, r *http.Request) {
 	b.Write(str)
 	b.WriteString(end)
 	b.WriteTo(w)
-	c.Callerid <- request.CallSid
-	fmt.Println(request.CallSid + " - Queued")
+	c.Callerid <- twiml.Thingy{r.Form["CallSid"][0], true}
+	fmt.Println(r.Form["CallSid"][0] + " - Queued")
 }

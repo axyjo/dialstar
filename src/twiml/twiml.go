@@ -20,6 +20,11 @@ type Dial struct {
 	Conference   Conference `xml:"Conference,omitempty"`
 }
 
+type Thingy struct {
+	CallSid string
+	Add     bool
+}
+
 type Conference struct {
 	Text                   string `xml:",chardata"`
 	Muted                  string `xml:"muted,attr,omitempty"`
